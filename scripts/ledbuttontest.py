@@ -10,7 +10,6 @@ def getTime():
 ledring = OutputDevice(17)
 bell = Button(4)
 ledToggle = 0
-waitingForDoorbellPress = 0
 
 def activateDoorBell():
     global ledToggle
@@ -30,24 +29,22 @@ def activateDoorBell():
         waitForDoorBellPress()
 
 def waitForDoorBellPress():
-    global waitingForDoorbellPress
-    waitingForDoorbellPress = 1
+    print(ledToggle)
     print(getTime() + " -------------------------------")
     print("waiting for doorbell press")
     bell.wait_for_press()
     print("door bell pressed")
-    print("ledToggle: " + ledToggle)
+    print("ledToggle: " + str(ledToggle))
     activateDoorBell()
     
 def on_publish(client,userdata,result):
-    print("published message")
     global ledToggle
+    print("published message")
     ledToggle += 1
     activateDoorBell()
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    global waitingForDoorbellPress
     print("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
