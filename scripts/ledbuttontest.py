@@ -1,3 +1,29 @@
+'''
+
+2019-02-25 22:49:09.382472 -------------------------------
+waiting for doorbell press
+2019-02-26 08:25:25.260333 door bell pressed
+ledToggle: 0
+led ring on
+publishing - on
+2019-02-26 08:25:26.285726 Connected with result code 0
+0
+2019-02-26 08:25:26.292555 -------------------------------
+waiting for doorbell press
+2019-02-26 08:25:34.094656 door bell pressed
+ledToggle: 0
+led ring on
+publishing - on
+published message
+led ring off
+publishing - off
+published message
+0
+
+
+
+'''
+
 from time import sleep
 from gpiozero import OutputDevice
 from gpiozero import Button
@@ -26,15 +52,12 @@ def activateDoorBell():
         client.publish("stat/doorbell","OFF")
     elif ledToggle == 2:
         ledToggle = 0
-        waitForDoorBellPress()
+        print("waiting for doorbell press")
 
-def waitForDoorBellPress():
-    print(ledToggle)
-    print(getTime() + " -------------------------------")
-    print("waiting for doorbell press")
-    bell.wait_for_press()
-    print("door bell pressed")
-    print("ledToggle: " + str(ledToggle))
+def doorBellPressed():
+    global ledToggle
+    ledToggle = 0
+    print(getTime() + " door bell pressed -------------------------------")
     activateDoorBell()
     
 def on_publish(client,userdata,result):
@@ -45,15 +68,15 @@ def on_publish(client,userdata,result):
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    #if waitingForDoorbellPress == 0:
-    waitForDoorBellPress()
+    print(getTime() + " Connected with result code "+str(rc))
+
 
 client = mqtt.Client("doorbell")
 client.on_connect = on_connect
 client.on_publish = on_publish
 client.username_pw_set(username="carl",password="asdf")
 client.connect("10.0.0.22", 1883, 60)
+
+bell.when_pressed = doorBellPressed
+print("waiting for doorbell press")
 client.loop_forever()
