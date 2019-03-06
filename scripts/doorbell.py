@@ -30,6 +30,8 @@ from gpiozero import Button
 import paho.mqtt.client as mqtt
 import datetime
 
+doorbellpressTopic = 'stat/doorbell'
+
 def getTime():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
 
@@ -43,13 +45,13 @@ def activateDoorBell():
         print("led ring on")
         ledring.on()
         print("publishing - on")
-        client.publish("stat/doorbell","ON")
+        client.publish(doorbellpressTopic,"ON")
     elif ledToggle == 1:
         sleep(2)
         print("led ring off")
         ledring.off()
         print("publishing - off")
-        client.publish("stat/doorbell","OFF")
+        client.publish(doorbellpressTopic,"OFF")
     elif ledToggle == 2:
         ledToggle = 0
         print("waiting for doorbell press")
