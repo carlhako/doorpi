@@ -5,8 +5,8 @@ After=multi-user.target
 [Service]
 Type=idle
 ExecStart=/usr/bin/python3 /home/pi/doorpi/scripts/doorbell.py
-user=pi
-group=pi
+User=pi
+Group=pi
 
 [Install]
 WantedBy=multi-user.target

@@ -3,7 +3,7 @@ from time import sleep
 from gpiozero import OutputDevice
 import datetime
 
-radar = MotionSensor(11,pull_up=False)
+radar = MotionSensor(24,pull_up=False)
 ledring = OutputDevice(17)
 
 def getTime():
